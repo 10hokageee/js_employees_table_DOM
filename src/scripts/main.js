@@ -66,9 +66,19 @@ const sortState = {
   4: 'asc',
 };
 
+let lastSortedColumn = null;
+
 function sortColumn(index, isNumber = false) {
   const rows = getRows();
-  const direction = sortState[index] === 'asc' ? 1 : -1;
+
+  let direction = 1;
+
+  if (lastSortedColumn === index) {
+    direction = sortState[index] === 'asc' ? -1 : 1;
+  } else {
+    sortState[index] = 'asc';
+    direction = 1;
+  }
 
   rows.sort((a, b) => {
     let valueA = a.children[index].textContent.trim();
@@ -84,7 +94,9 @@ function sortColumn(index, isNumber = false) {
     return valueA.localeCompare(valueB) * direction;
   });
 
-  sortState[index] = sortState[index] === 'asc' ? 'desc' : 'asc';
+  sortState[index] = direction === 1 ? 'asc' : 'desc';
+  lastSortedColumn = index;
+
   tbody.append(...rows);
 }
 
@@ -100,7 +112,13 @@ form.addEventListener('submit', (e) => {
   const officeValue = formData.get('office');
   const normalizedSalaryValue = `$${Number(salaryValue).toLocaleString('en-US')}`;
 
-  if (!nameValue || !ageValue || !salaryValue || !officeValue) {
+  if (
+    !nameValue ||
+    !ageValue ||
+    !salaryValue ||
+    !officeValue ||
+    !positionValue
+  ) {
     getNotification('Fill in the fields.', 'warning');
 
     return;
