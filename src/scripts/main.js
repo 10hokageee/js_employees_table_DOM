@@ -112,14 +112,8 @@ form.addEventListener('submit', (e) => {
   const officeValue = formData.get('office');
   const normalizedSalaryValue = `$${Number(salaryValue).toLocaleString('en-US')}`;
 
-  if (
-    !nameValue ||
-    !ageValue ||
-    !salaryValue ||
-    !officeValue ||
-    !positionValue
-  ) {
-    getNotification('Fill in the fields.', 'warning');
+  if (!nameValue) {
+    getNotification('Name is required.', 'error');
 
     return;
   }
@@ -130,8 +124,14 @@ form.addEventListener('submit', (e) => {
     return;
   }
 
-  if (positionValue.length < 4) {
-    getNotification('Position must be longer than 4 letters.', 'error');
+  if (!positionValue) {
+    getNotification('Position is required.', 'error');
+
+    return;
+  }
+
+  if (!ageValue) {
+    getNotification('Age is required.', 'error');
 
     return;
   }
@@ -141,6 +141,18 @@ form.addEventListener('submit', (e) => {
       'Age must be no less than 18 and no more than 90 years.',
       'error',
     );
+
+    return;
+  }
+
+  if (!salaryValue) {
+    getNotification('Salary is required.', 'error');
+
+    return;
+  }
+
+  if (!officeValue) {
+    getNotification('Office is required.', 'error');
 
     return;
   }
